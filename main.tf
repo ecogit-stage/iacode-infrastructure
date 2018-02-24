@@ -37,6 +37,27 @@ resource "aws_security_group" "ssh-access" {
   }
 }
 
+# Setup DNS record for iacode.tech
+resource "aws_eip" "ins" {
+  instance = "${aws_instance.iaweb1.id}"
+  vpc      = true
+}
+
+resource "aws_route53_zone" "primary" {
+
+  name = "iacode.tech"
+  force_destroy = true
+}
+
+resource "aws_route53_record" "site" {
+  zone_id = "${aws_route53_zone.primary.zone_id}"
+  name    = "site.iacode.tech"
+  type    = "A"
+  ttl     = "60"
+  records = ["${aws_eip.ins.public_ip}"]
+}
+
+
 output "ip" {
   value = "${data.http.getmylocalpubip.body}"
 }   
