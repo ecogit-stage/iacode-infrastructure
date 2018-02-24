@@ -46,6 +46,8 @@ resource "aws_eip" "ins" {
 resource "aws_route53_zone" "primary" {
 
   name = "iacode.tech"
+  delegation_set_id = "N2NIJ94W6U2VSN"
+  comment = "Powered By IACODE.COM"
   force_destroy = true
 }
 
@@ -57,6 +59,10 @@ resource "aws_route53_record" "site" {
   records = ["${aws_eip.ins.public_ip}"]
 }
 
+# output dynamically generated nameservers
+output "nameserv" {
+  value = "${aws_route53_zone.primary.name_servers}"
+}
 
 output "ip" {
   value = "${data.http.getmylocalpubip.body}"
