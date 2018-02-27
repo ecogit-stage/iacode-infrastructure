@@ -13,7 +13,7 @@ provider "aws" {
 
 resource "aws_instance" "iaweb1" {
   #ami = "ami-97785bed"
-  ami = "ami-c02bc0bd"
+  ami = "ami-5c01ea21"
   instance_type = "t2.micro"
   key_name = "tkey"
 
@@ -36,6 +36,12 @@ resource "aws_security_group" "ssh-access" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["${chomp(data.http.getmylocalpubip.body)}/32"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
   }
 }
 
